@@ -1,3 +1,5 @@
+import net.didion.jwnl.JWNL;
+
 import java.util.ArrayList;
 import java.util.Random;
 
