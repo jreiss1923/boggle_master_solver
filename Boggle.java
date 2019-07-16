@@ -56,18 +56,26 @@ class BoggleBoard {
         }
     }
 
+    ArrayList<String> getAllWords(int lengthOfWord){
+        ArrayList<String> allWords = new ArrayList<>();
+        for(int i = 0; i < 5; i++){
+            for(int j = 0; j < 5; j++){
+                allWords.addAll(this.getWordCombos(this.boardState[i][j], lengthOfWord - 1));
+            }
+        }
+        return allWords;
+    }
+
     ArrayList<String> getWordCombos(Dice startingDice, int lengthOfWord){
         ArrayList<String> allCombos = new ArrayList<>();
 
         ArrayList<Dice> adjacentDice = this.getAdjacentDice(startingDice);
 
-        ArrayList<ArrayList<String>> adjacentWords = new ArrayList<>();
+        ArrayList<String> adjacentWords = new ArrayList<>();
         ArrayList<ArrayList<Dice>> encounteredDice = new ArrayList<>();
 
         for(Dice d : adjacentDice){
-            ArrayList<String> tempWord = new ArrayList<>();
-            tempWord.add("" + startingDice.currentLetter + d.currentLetter);
-            adjacentWords.add(tempWord);
+            adjacentWords.add("" + startingDice.currentLetter + d.currentLetter);
             ArrayList<Dice> temp = new ArrayList<>();
             temp.add(d);
             temp.add(startingDice);
@@ -81,32 +89,67 @@ class BoggleBoard {
         return allCombos;
     }
 
-    ArrayList<String> getWords(ArrayList<String> startingWords, Dice startingDice, ArrayList<Dice> encounteredDice, int lengthOfWord){
-        return new ArrayList<>();
+    ArrayList<String> getWords(String startingWord, Dice startingDice, ArrayList<Dice> encounteredDice, int lengthOfWord){
+        if(lengthOfWord == 0){
+            ArrayList<String> temp = new ArrayList<>();
+            temp.add(startingWord);
+            return temp;
+        }
+        else {
+            ArrayList<Dice> adjacentDice = this.getAdjacentDice(startingDice);
+            ArrayList<String> combinedWords = new ArrayList<>();
+            ArrayList<String> allCombos = new ArrayList<>();
+
+
+            for (Dice d : encounteredDice) {
+                if (adjacentDice.contains(d)) {
+                    adjacentDice.remove(d);
+                }
+            }
+
+            for (int i = 0; i < adjacentDice.size(); i++) {
+                combinedWords.add(startingWord + adjacentDice.get(i).currentLetter);
+                ArrayList<Dice> tempDiceEncountered = new ArrayList<>();
+                tempDiceEncountered.addAll(encounteredDice);
+                tempDiceEncountered.add(adjacentDice.get(i));
+
+                allCombos.addAll(this.getWords(combinedWords.get(i), adjacentDice.get(i), tempDiceEncountered, lengthOfWord - 1));
+            }
+
+            return allCombos;
+        }
+
+
+
+
     }
 
 
 
     ArrayList<Dice> getAdjacentDice(Dice startingDice){
         ArrayList<Dice> adjacentDice = new ArrayList<>();
+        if(startingDice.posy - 1 >= 0){
+            adjacentDice.add(boardState[startingDice.posy - 1][startingDice.posx]);
+        }
+        if(startingDice.posy + 1 <= 4){
+            adjacentDice.add(boardState[startingDice.posy + 1][startingDice.posx]);
+        }
         if(startingDice.posx - 1 >= 0){
             adjacentDice.add(boardState[startingDice.posy][startingDice.posx - 1]);
             if(startingDice.posy - 1 >= 0){
-                adjacentDice.add(boardState[startingDice.posy - 1][startingDice.posx]);
                 adjacentDice.add(boardState[startingDice.posy - 1][startingDice.posx - 1]);
             }
-            else if(startingDice.posy + 1 <= 4){
-                adjacentDice.add(boardState[startingDice.posy + 1][startingDice.posx]);
+            if(startingDice.posy + 1 <= 4){
                 adjacentDice.add(boardState[startingDice.posy + 1][startingDice.posx - 1]);
             }
         }
-        else if(startingDice.posx + 1 <= 4){
+        if(startingDice.posx + 1 <= 4){
             adjacentDice.add(boardState[startingDice.posy][startingDice.posx + 1]);
             if(startingDice.posy - 1 >= 0){
-                adjacentDice.add(boardState[startingDice.posy - 1][startingDice.posx - 1]);
+                adjacentDice.add(boardState[startingDice.posy - 1][startingDice.posx + 1]);
             }
-            else if(startingDice.posy + 1 <= 4){
-                adjacentDice.add(boardState[startingDice.posy + 1][startingDice.posx - 1]);
+            if(startingDice.posy + 1 <= 4){
+                adjacentDice.add(boardState[startingDice.posy + 1][startingDice.posx + 1]);
             }
         }
         return adjacentDice;
@@ -238,13 +281,6 @@ class Dice{
 
     }
 
-    boolean checkAdjacent(Dice d){
-        if(Math.abs(d.posx - this.posx) <= 1 && Math.abs(d.posy - this.posy) <= 1){
-            return true;
-        }
-        return false;
-    }
-
 }
 
 class test{
@@ -254,5 +290,10 @@ class test{
         b.generateBoard();
         b.printBoard();
         b.printDice();
+        ArrayList<String> allCombos = b.getAllWords(4);
+        for(String word : allCombos){
+            System.out.println(word);
+        }
+
     }
 }
