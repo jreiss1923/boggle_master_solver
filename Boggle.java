@@ -1,7 +1,10 @@
-import net.didion.jwnl.JWNL;
-
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 class BoggleBoard {
 
@@ -54,6 +57,47 @@ class BoggleBoard {
             }
             System.out.println();
         }
+    }
+
+    ArrayList<String> getAllCorrectWords(){
+        ArrayList<String> allWords = new ArrayList<>();
+        ArrayList<String> dictWords = this.scanDictWords();
+
+        allWords.addAll(getAllWords(4));
+        allWords.addAll(getAllWords(5));
+
+        ArrayList<String> allWordsCopy = new ArrayList<>();
+        allWordsCopy.addAll(allWords);
+
+        for(String s : allWordsCopy){
+            if(dictWords.contains(s)){
+                System.out.println(s + " is in the dictionary");
+            }
+            else{
+                System.out.println(s + " is not in the dictionary");
+                allWords.remove(s);
+            }
+        }
+
+        return allWords;
+
+    }
+
+    ArrayList<String> scanDictWords(){
+        ArrayList<String> dictWords = new ArrayList<>();
+        try {
+            File f = new File("C:\\Users\\Joshua Reiss\\IdeaProjects\\Boggle\\src\\words.txt");
+            Scanner sc = new Scanner(f);
+
+            while(sc.hasNextLine()){
+                dictWords.add(sc.nextLine());
+            }
+        }
+        catch (IOException e){
+            System.out.println("oopsy poopsy we made a fucky wucky uwu");
+        }
+
+        return dictWords;
     }
 
     ArrayList<String> getAllWords(int lengthOfWord){
@@ -290,10 +334,13 @@ class test{
         b.generateBoard();
         b.printBoard();
         b.printDice();
-        ArrayList<String> allCombos = b.getAllWords(4);
-        for(String word : allCombos){
-            System.out.println(word);
+        ArrayList<String> words = b.getAllCorrectWords();
+        for(String s : words){
+            System.out.println(s);
         }
 
+
     }
+
+
 }
