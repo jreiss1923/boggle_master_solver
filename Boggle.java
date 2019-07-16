@@ -28,10 +28,88 @@ class BoggleBoard {
                 int diceNumLocation = rand.nextInt(diceNums.size());
                 int diceNum = diceNums.get(diceNumLocation);
                 int randSide = rand.nextInt(6);
-                boardState[i][j] = new Dice(diceNum, randSide);
+                boardState[i][j] = new Dice(diceNum, randSide, j, i);
                 diceNums.remove(diceNumLocation);
             }
         }
+    }
+
+    void printBoard(){
+        for(int i = 0; i < 5; i++){
+            for(int j = 0; j < 5; j++){
+                System.out.print(boardState[i][j].currentLetter + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    void printDice(){
+        for(int i = 0; i < 5; i++){
+            for(int j = 0; j < 5; j++){
+                System.out.print("{");
+                for(char letter : boardState[i][j].diceLetters){
+                    System.out.print(letter + " ");
+                }
+                System.out.print("} ");
+            }
+            System.out.println();
+        }
+    }
+
+    ArrayList<String> getWordCombos(Dice startingDice, int lengthOfWord){
+        ArrayList<String> allCombos = new ArrayList<>();
+
+        ArrayList<Dice> adjacentDice = this.getAdjacentDice(startingDice);
+
+        ArrayList<ArrayList<String>> adjacentWords = new ArrayList<>();
+        ArrayList<ArrayList<Dice>> encounteredDice = new ArrayList<>();
+
+        for(Dice d : adjacentDice){
+            ArrayList<String> tempWord = new ArrayList<>();
+            tempWord.add("" + startingDice.currentLetter + d.currentLetter);
+            adjacentWords.add(tempWord);
+            ArrayList<Dice> temp = new ArrayList<>();
+            temp.add(d);
+            temp.add(startingDice);
+            encounteredDice.add(temp);
+        }
+
+        for(int i = 0; i < adjacentWords.size(); i++){
+            allCombos.addAll(this.getWords(adjacentWords.get(i), adjacentDice.get(i), encounteredDice.get(i), lengthOfWord - 1));
+        }
+
+        return allCombos;
+    }
+
+    ArrayList<String> getWords(ArrayList<String> startingWords, Dice startingDice, ArrayList<Dice> encounteredDice, int lengthOfWord){
+        return new ArrayList<>();
+    }
+
+
+
+    ArrayList<Dice> getAdjacentDice(Dice startingDice){
+        ArrayList<Dice> adjacentDice = new ArrayList<>();
+        if(startingDice.posx - 1 >= 0){
+            adjacentDice.add(boardState[startingDice.posy][startingDice.posx - 1]);
+            if(startingDice.posy - 1 >= 0){
+                adjacentDice.add(boardState[startingDice.posy - 1][startingDice.posx]);
+                adjacentDice.add(boardState[startingDice.posy - 1][startingDice.posx - 1]);
+            }
+            else if(startingDice.posy + 1 <= 4){
+                adjacentDice.add(boardState[startingDice.posy + 1][startingDice.posx]);
+                adjacentDice.add(boardState[startingDice.posy + 1][startingDice.posx - 1]);
+            }
+        }
+        else if(startingDice.posx + 1 <= 4){
+            adjacentDice.add(boardState[startingDice.posy][startingDice.posx + 1]);
+            if(startingDice.posy - 1 >= 0){
+                adjacentDice.add(boardState[startingDice.posy - 1][startingDice.posx - 1]);
+            }
+            else if(startingDice.posy + 1 <= 4){
+                adjacentDice.add(boardState[startingDice.posy + 1][startingDice.posx - 1]);
+            }
+        }
+        return adjacentDice;
     }
 
 
@@ -45,11 +123,15 @@ class Dice{
     int diceNum;
     char[] diceLetters;
     char currentLetter;
+    int posx;
+    int posy;
 
-    Dice(int diceNum, int randSide){
+    Dice(int diceNum, int randSide, int posx, int posy){
         this.diceNum = diceNum + 1;
         this.diceLetters = this.getLetters(this.diceNum);
         this.currentLetter = diceLetters[randSide];
+        this.posx = posx;
+        this.posy = posy;
     }
 
     char[] getLetters(int diceNum){
@@ -156,6 +238,13 @@ class Dice{
 
     }
 
+    boolean checkAdjacent(Dice d){
+        if(Math.abs(d.posx - this.posx) <= 1 && Math.abs(d.posy - this.posy) <= 1){
+            return true;
+        }
+        return false;
+    }
+
 }
 
 class test{
@@ -163,10 +252,7 @@ class test{
     public static void main(String[] args){
         BoggleBoard b = new BoggleBoard();
         b.generateBoard();
-        for(int i = 0; i < 5; i++){
-            for(int j = 0; j < 5; j++){
-                System.out.println(b.boardState[i][j].currentLetter + ", " + b.boardState[i][j].diceNum);
-            }
-        }
+        b.printBoard();
+        b.printDice();
     }
 }
