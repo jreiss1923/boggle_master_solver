@@ -1,10 +1,58 @@
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.JSONObject;
+
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import javax.net.ssl.HttpsURLConnection;
+
+class DictionaryWordFinder{
+
+    String app_id = "1f7905d8";
+    String app_key = "7262f34749ae1cd42c90f79626942ac7";
+
+
+    boolean isWordBoggle(String word){
+        JSONParser parser = new JSONParser();
+        String website = "https://od-api.oxforddictionaries.com:443/api/v2/entries/en-gb/" + word.toLowerCase() + "?" + "fields=definitions&strictMatch=true";
+        try {
+            URL url = new URL(website);
+            HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+            urlConnection.setRequestProperty("Accept","application/json");
+            urlConnection.setRequestProperty("app_id",app_id);
+            urlConnection.setRequestProperty("app_key",app_key);
+
+            // read the output from the server
+            BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+            StringBuilder stringBuilder = new StringBuilder();
+
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line + "\n");
+            }
+
+            JSONObject jsonWord = (JSONObject) parser.parse(stringBuilder.toString());
+            if(jsonWord.containsKey("error")){
+                return false;
+            }
+            return true;
+
+
+
+        }
+        catch (Exception e) {
+            return false;
+        }
+    }
+
+}
 
 class BoggleBoard {
 
@@ -59,45 +107,39 @@ class BoggleBoard {
         }
     }
 
+    int calculateScore(ArrayList<String> words){
+        int totalScore = 0;
+        for(String s : words){
+            if(s.length() >= 4){
+                totalScore += s.length() - 3;
+            }
+        }
+        return totalScore;
+    }
+
     ArrayList<String> getAllCorrectWords(){
+
         ArrayList<String> allWords = new ArrayList<>();
-        ArrayList<String> dictWords = this.scanDictWords();
-
-        allWords.addAll(getAllWords(4));
-        allWords.addAll(getAllWords(5));
-
         ArrayList<String> allWordsCopy = new ArrayList<>();
+        DictionaryWordFinder d = new DictionaryWordFinder();
+
+        allWords.addAll(this.getAllWords(4));
+
         allWordsCopy.addAll(allWords);
 
         for(String s : allWordsCopy){
-            if(dictWords.contains(s)){
-                System.out.println(s + " is in the dictionary");
+            if(!d.isWordBoggle(s)){
+                System.out.println(s + " is not in the dictionary.");
+                allWords.remove(s);
             }
             else{
-                System.out.println(s + " is not in the dictionary");
-                allWords.remove(s);
+                System.out.println(s + " is a word.");
             }
         }
 
         return allWords;
 
-    }
 
-    ArrayList<String> scanDictWords(){
-        ArrayList<String> dictWords = new ArrayList<>();
-        try {
-            File f = new File("C:\\Users\\Joshua Reiss\\IdeaProjects\\Boggle\\src\\words.txt");
-            Scanner sc = new Scanner(f);
-
-            while(sc.hasNextLine()){
-                dictWords.add(sc.nextLine());
-            }
-        }
-        catch (IOException e){
-            System.out.println("oopsy poopsy we made a fucky wucky uwu");
-        }
-
-        return dictWords;
     }
 
     ArrayList<String> getAllWords(int lengthOfWord){
@@ -334,10 +376,12 @@ class test{
         b.generateBoard();
         b.printBoard();
         b.printDice();
-        ArrayList<String> words = b.getAllCorrectWords();
-        for(String s : words){
+        ArrayList<String> correctWords = b.getAllCorrectWords();
+        for(String s : correctWords){
             System.out.println(s);
         }
+        System.out.println(b.calculateScore(correctWords));
+
 
 
     }
