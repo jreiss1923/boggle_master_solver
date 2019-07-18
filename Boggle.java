@@ -119,7 +119,7 @@ class BoggleBoard {
 
         for(int i = 0; i < allWords.size(); i++){
             if(this.elapsedTime() >=180){
-                return correctWords;
+                return this.remove4LetterPlurals(correctWords, dictWords);
             }
             else {
                 if (dictWords.contains(allWords.get(i))) {
@@ -133,7 +133,7 @@ class BoggleBoard {
 
         this.remove4LetterPlurals(correctWords, dictWords);
 
-        return allWords;
+        return correctWords;
 
     }
 
