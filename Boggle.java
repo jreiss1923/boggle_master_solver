@@ -8,8 +8,8 @@ import java.util.LinkedHashSet;
 class BoggleBoard {
 
     Dice[][] boardState;
-
     ArrayList<Integer> diceNums = new ArrayList<Integer>();
+    long startTime;
 
     void instantiateDiceNums(){
         for(int i = 0; i < 25; i++){
@@ -19,6 +19,7 @@ class BoggleBoard {
 
     BoggleBoard(){
         this.boardState = new Dice[5][5];
+        this.startTime = System.currentTimeMillis();
     }
 
     void generateBoard(){
@@ -61,8 +62,20 @@ class BoggleBoard {
     int calculateScore(ArrayList<String> words){
         int totalScore = 0;
         for(String s : words){
-            if(s.length() >= 4){
-                totalScore += s.length() - 3;
+            if(s.length() == 4){
+                totalScore += 1;
+            }
+            else if(s.length() == 5){
+                totalScore += 2;
+            }
+            else if(s.length() == 6){
+                totalScore += 3;
+            }
+            else if(s.length() == 7){
+                totalScore += 5;
+            }
+            else if(s.length() >= 8){
+                totalScore += 11;
             }
         }
         return totalScore;
@@ -74,6 +87,25 @@ class BoggleBoard {
         return new ArrayList<>(hashSet);
     }
 
+    ArrayList<String> remove4LetterPlurals(ArrayList<String> words, ArrayList<String> dictWords){
+        ArrayList<String> wordsCopy = new ArrayList<>();
+        wordsCopy.addAll(words);
+
+        for(String s : wordsCopy){
+            if(s.length() == 4){
+                if(s.charAt(3) == 's' && !(s.charAt(2) == 's') && dictWords.contains(s.substring(0, 3))){
+                    words.remove(s);
+                }
+            }
+        }
+
+        return words;
+    }
+
+    long elapsedTime(){
+        return (System.currentTimeMillis() - this.startTime)/1000;
+    }
+
     ArrayList<String> getAllCorrectWords(){
         ArrayList<String> allWords = new ArrayList<>();
         ArrayList<String> dictWords = this.scanDictWords();
@@ -83,18 +115,23 @@ class BoggleBoard {
         allWords.addAll(getAllWords(6));
         allWords.addAll(getAllWords(7));
 
-        ArrayList<String> allWordsCopy = new ArrayList<>();
-        allWordsCopy.addAll(allWords);
+        ArrayList<String> correctWords = new ArrayList<>();
 
-        for(String s : allWordsCopy){
-            if(dictWords.contains(s)){
-                System.out.println(s + " is in the dictionary");
+        for(int i = 0; i < allWords.size(); i++){
+            if(this.elapsedTime() >=180){
+                return correctWords;
             }
-            else{
-                System.out.println(s + " is not in the dictionary");
-                allWords.remove(s);
+            else {
+                if (dictWords.contains(allWords.get(i))) {
+                    System.out.println(allWords.get(i) + " is in the dictionary");
+                    correctWords.add(allWords.get(i));
+                } else {
+                    System.out.println(allWords.get(i) + " is not in the dictionary");
+                }
             }
         }
+
+        this.remove4LetterPlurals(correctWords, dictWords);
 
         return allWords;
 
