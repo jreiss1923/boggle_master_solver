@@ -5,23 +5,28 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.LinkedHashSet;
 
+//contains the board and word finding functions
 class BoggleBoard {
 
     Dice[][] boardState;
-    ArrayList<Integer> diceNums = new ArrayList<Integer>();
+    //variable to help make dice placement random
+    ArrayList<Integer> diceNums = new ArrayList<>();
     long startTime;
 
+    //keeps track of possible numbers of dice
     void instantiateDiceNums(){
         for(int i = 0; i < 25; i++){
             diceNums.add(i);
         }
     }
 
+    //instantiates the boardstate and starting time
     BoggleBoard(){
         this.boardState = new Dice[5][5];
         this.startTime = System.currentTimeMillis();
     }
 
+    //generates a board from the possible dice
     void generateBoard(){
         this.instantiateDiceNums();
         Random rand = new Random();
@@ -37,6 +42,7 @@ class BoggleBoard {
         }
     }
 
+    //prints the current boardstate
     void printBoard(){
         for(int i = 0; i < 5; i++){
             for(int j = 0; j < 5; j++){
@@ -46,6 +52,7 @@ class BoggleBoard {
         }
     }
 
+    //prints the dice at each position in the board
     void printDice(){
         for(int i = 0; i < 5; i++){
             for(int j = 0; j < 5; j++){
@@ -59,6 +66,7 @@ class BoggleBoard {
         }
     }
 
+    //calculates the boggle score for a given list of words
     int calculateScore(ArrayList<String> words){
         int totalScore = 0;
         for(String s : words){
@@ -81,12 +89,16 @@ class BoggleBoard {
         return totalScore;
     }
 
+    //removes all duplicates from the list of words
+    //idk how this works
     ArrayList<String> removeAllDuplicates(ArrayList<String> words){
         LinkedHashSet<String> hashSet = new LinkedHashSet<>(words);
 
         return new ArrayList<>(hashSet);
     }
 
+    //removes all 4 letter plurals from the list of words
+    //against boggle master rules
     ArrayList<String> remove4LetterPlurals(ArrayList<String> words, ArrayList<String> dictWords){
         ArrayList<String> wordsCopy = new ArrayList<>();
         wordsCopy.addAll(words);
@@ -102,10 +114,13 @@ class BoggleBoard {
         return words;
     }
 
+    //returns the elapsed time
+    //unnecessary now that trie has been implemented
     long elapsedTime(){
         return (System.currentTimeMillis() - this.startTime)/1000;
     }
 
+    //gets all correct words
     ArrayList<String> getAllCorrectWords(){
         ArrayList<String> allWords = new ArrayList<>();
         ArrayList<String> dictWords = this.scanDictWords();
@@ -114,6 +129,8 @@ class BoggleBoard {
         allWords.addAll(getAllWords(5));
         allWords.addAll(getAllWords(6));
         allWords.addAll(getAllWords(7));
+        allWords.addAll(getAllWords(8));
+        allWords.addAll(getAllWords(9));
 
         ArrayList<String> correctWords = new ArrayList<>();
 
@@ -138,6 +155,7 @@ class BoggleBoard {
 
     }
 
+    //adds all words from dictionary.txt to arraylist
     ArrayList<String> scanDictWords(){
         ArrayList<String> dictWords = new ArrayList<>();
         try {
@@ -155,6 +173,7 @@ class BoggleBoard {
         return dictWords;
     }
 
+    //gets all words from board given length of word
     ArrayList<String> getAllWords(int lengthOfWord){
         ArrayList<String> allWords = new ArrayList<>();
         for(int i = 0; i < 5; i++){
@@ -165,6 +184,7 @@ class BoggleBoard {
         return allWords;
     }
 
+    //gets all words from board given length of word and a starting position
     ArrayList<String> getWordCombos(Dice startingDice, int lengthOfWord){
         ArrayList<String> allCombos = new ArrayList<>();
 
@@ -188,6 +208,7 @@ class BoggleBoard {
         return allCombos;
     }
 
+    //recurses through a pattern, adding all possible patterns to the startingWord
     ArrayList<String> getWords(String startingWord, Dice startingDice, ArrayList<Dice> encounteredDice, int lengthOfWord){
         if(lengthOfWord == 0){
             ArrayList<String> temp = new ArrayList<>();
@@ -223,8 +244,7 @@ class BoggleBoard {
 
     }
 
-
-
+    //gets all dice adjacent to one another
     ArrayList<Dice> getAdjacentDice(Dice startingDice){
         ArrayList<Dice> adjacentDice = new ArrayList<>();
         if(startingDice.posy - 1 >= 0){
@@ -260,6 +280,7 @@ class BoggleBoard {
 
 }
 
+//dice class
 class Dice{
 
     int diceNum;
@@ -268,6 +289,7 @@ class Dice{
     int posx;
     int posy;
 
+    //dice constructor to create a die given a number and a random side
     Dice(int diceNum, int randSide, int posx, int posy){
         this.diceNum = diceNum + 1;
         this.diceLetters = this.getLetters(this.diceNum);
@@ -276,6 +298,7 @@ class Dice{
         this.posy = posy;
     }
 
+    //function that decides which die to choose given a die number
     char[] getLetters(int diceNum){
         if(diceNum == 1){
             char[] diceList1 = {'a', 'i', 's', 'r', 'f', 'a'};
