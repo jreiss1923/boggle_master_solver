@@ -132,6 +132,7 @@ class BoggleBoard {
         }
 
         this.remove4LetterPlurals(correctWords, dictWords);
+        this.removeAllDuplicates(correctWords);
 
         return correctWords;
 
@@ -148,7 +149,7 @@ class BoggleBoard {
             }
         }
         catch (IOException e){
-            System.out.println("oopsy poopsy we made a fucky wucky uwu");
+            System.out.println("Could not find dictionary.txt file in your folder");
         }
 
         return dictWords;
@@ -384,6 +385,7 @@ class Dice{
 class test{
 
     public static void main(String[] args){
+
         long start = System.currentTimeMillis();
         BoggleBoard b = new BoggleBoard();
         b.generateBoard();
