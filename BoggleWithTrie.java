@@ -7,6 +7,7 @@ class BoggleBoardWithTrie extends BoggleBoard{
 
     Trie dictionary = new Trie();
 
+    //now adds list of words to trie
     ArrayList<String> scanDictWords(){
         ArrayList<String> dictWords = new ArrayList<>();
         try {
@@ -25,6 +26,7 @@ class BoggleBoardWithTrie extends BoggleBoard{
         return dictWords;
     }
 
+    //now uses trie as reference instead of an arraylist
     ArrayList<String> getAllCorrectWords(){
         ArrayList<String> allWords = new ArrayList<>();
         ArrayList<String> dictWords = this.scanDictWords();
