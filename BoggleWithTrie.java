@@ -15,8 +15,9 @@ class BoggleBoardWithTrie extends BoggleBoard{
             Scanner sc = new Scanner(f);
 
             while(sc.hasNextLine()){
-                dictWords.add(sc.nextLine());
-                dictionary.insert(sc.nextLine());
+                String s = sc.nextLine();
+                dictWords.add(s);
+                dictionary.insert(s);
             }
         }
         catch (IOException e){
@@ -35,6 +36,7 @@ class BoggleBoardWithTrie extends BoggleBoard{
         allWords.addAll(getAllWords(5));
         allWords.addAll(getAllWords(6));
         allWords.addAll(getAllWords(7));
+        allWords.addAll(getAllWords(8));
 
         ArrayList<String> correctWords = new ArrayList<>();
 
@@ -58,11 +60,8 @@ class Test{
         BoggleBoardWithTrie b = new BoggleBoardWithTrie();
         b.generateBoard();
         b.printBoard();
-        long startTime = System.currentTimeMillis();
         ArrayList<String> words = b.getAllCorrectWords();
-        long endTime = System.currentTimeMillis();
 
-        System.out.println("Elapsed time: " + (endTime - startTime)/1000 + " seconds");
         for(String word : words){
             System.out.println(word);
         }
