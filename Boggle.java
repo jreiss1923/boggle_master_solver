@@ -167,7 +167,7 @@ class BoggleBoard {
             }
         }
         catch (IOException e){
-            System.out.println("Could not find dictionary.txt file in your folder");
+            System.out.println("Error: dictionary.txt file not found");
         }
 
         return dictWords;

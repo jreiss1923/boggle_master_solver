@@ -21,7 +21,7 @@ class BoggleBoardWithTrie extends BoggleBoard{
             }
         }
         catch (IOException e){
-            System.out.println("oopsy poopsy we made a fucky wucky uwu");
+            System.out.println("Error: dictionary.txt file not found");
         }
 
         return dictWords;
