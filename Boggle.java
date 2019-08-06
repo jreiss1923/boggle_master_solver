@@ -1,9 +1,8 @@
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.LinkedHashSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 //contains the board and word finding functions
 class BoggleBoard {
@@ -12,6 +11,7 @@ class BoggleBoard {
     //variable to help make dice placement random
     ArrayList<Integer> diceNums = new ArrayList<>();
     long startTime;
+    ArrayList<ArrayList<Dice>> diceWordPosTracker = new ArrayList<>();
 
     //keeps track of possible numbers of dice
     void instantiateDiceNums(){
@@ -89,12 +89,48 @@ class BoggleBoard {
         return totalScore;
     }
 
+    boolean compareDiceLists(ArrayList<Dice> dList, ArrayList<Dice> dListNew){
+        ArrayList<Character> temp1 = new ArrayList<>();
+        ArrayList<Character> temp2 = new ArrayList<>();
+        for(Dice d : dList){
+            temp1.add(d.currentLetter);
+        }
+        for(Dice d : dListNew){
+            temp2.add(d.currentLetter);
+        }
+
+        if(temp1.equals(temp2)){
+            return true;
+        }
+        return false;
+    }
+
     //removes all duplicates from the list of words
     //idk how this works
     ArrayList<String> removeAllDuplicates(ArrayList<String> words){
         LinkedHashSet<String> hashSet = new LinkedHashSet<>(words);
-
         return new ArrayList<>(hashSet);
+    }
+
+    ArrayList<ArrayList<Dice>> removeAllDiceDuplicates(){
+        ArrayList<ArrayList<Dice>> diceWordPosTrackerNew = new ArrayList<>();
+
+        for(ArrayList<Dice> dList : this.diceWordPosTracker){
+            boolean addMe = true;
+            for(ArrayList<Dice> dListNew : diceWordPosTrackerNew){
+                if(this.compareDiceLists(dList, dListNew)){
+                    addMe = false;
+                }
+            }
+            if(addMe){
+                diceWordPosTrackerNew.add(dList);
+            }
+        }
+
+        this.diceWordPosTracker.clear();
+        this.diceWordPosTracker.addAll(diceWordPosTrackerNew);
+        return diceWordPosTrackerNew;
+
     }
 
     //removes all 4 letter plurals from the list of words
@@ -112,6 +148,28 @@ class BoggleBoard {
         }
 
         return words;
+    }
+
+    void remove4LetterDicePlurals(ArrayList<String> dictWords){
+        ArrayList<String> temp = new ArrayList<>();
+        for(ArrayList<Dice> dList : this.diceWordPosTracker){
+            String s = "";
+            for(Dice d : dList){
+                s += d.currentLetter;
+            }
+            temp.add(s);
+        }
+
+        for(int i = 0; i < temp.size(); i++){
+            if(temp.get(i).length() == 4){
+                if(temp.get(i).charAt(3) == 's' && !(temp.get(i).charAt(2) == 's') && dictWords.contains(temp.get(i).substring(0, 3))){
+                    this.diceWordPosTracker.add(i, new ArrayList<>());
+                    this.diceWordPosTracker.remove(i + 1);
+                }
+            }
+        }
+
+        this.diceWordPosTracker.removeAll(Collections.singleton(new ArrayList<>()));
     }
 
     //returns the elapsed time
@@ -192,8 +250,13 @@ class BoggleBoard {
 
         ArrayList<String> adjacentWords = new ArrayList<>();
         ArrayList<ArrayList<Dice>> encounteredDice = new ArrayList<>();
+        ArrayList<ArrayList<Dice>> trackDice = new ArrayList<>();
 
         for(Dice d : adjacentDice){
+            ArrayList<Dice> tempDiceWord = new ArrayList<>();
+            tempDiceWord.add(startingDice);
+            tempDiceWord.add(d);
+            trackDice.add(tempDiceWord);
             adjacentWords.add("" + startingDice.currentLetter + d.currentLetter);
             ArrayList<Dice> temp = new ArrayList<>();
             temp.add(d);
@@ -202,15 +265,16 @@ class BoggleBoard {
         }
 
         for(int i = 0; i < adjacentWords.size(); i++){
-            allCombos.addAll(this.getWords(adjacentWords.get(i), adjacentDice.get(i), encounteredDice.get(i), lengthOfWord - 1));
+            allCombos.addAll(this.getWords(adjacentWords.get(i), trackDice.get(i), adjacentDice.get(i), encounteredDice.get(i), lengthOfWord - 1));
         }
 
         return allCombos;
     }
 
     //recurses through a pattern, adding all possible patterns to the startingWord
-    ArrayList<String> getWords(String startingWord, Dice startingDice, ArrayList<Dice> encounteredDice, int lengthOfWord){
+    ArrayList<String> getWords(String startingWord, ArrayList<Dice> diceWord, Dice startingDice, ArrayList<Dice> encounteredDice, int lengthOfWord){
         if(lengthOfWord == 0){
+            this.diceWordPosTracker.add(diceWord);
             ArrayList<String> temp = new ArrayList<>();
             temp.add(startingWord);
             return temp;
@@ -219,6 +283,7 @@ class BoggleBoard {
             ArrayList<Dice> adjacentDice = this.getAdjacentDice(startingDice);
             ArrayList<String> combinedWords = new ArrayList<>();
             ArrayList<String> allCombos = new ArrayList<>();
+            ArrayList<ArrayList<Dice>> temp = new ArrayList<>();
 
 
             for (Dice d : encounteredDice) {
@@ -229,11 +294,14 @@ class BoggleBoard {
 
             for (int i = 0; i < adjacentDice.size(); i++) {
                 combinedWords.add(startingWord + adjacentDice.get(i).currentLetter);
+                ArrayList<Dice> tempDiceWord = new ArrayList<>(diceWord);
+                tempDiceWord.add(adjacentDice.get(i));
+                temp.add(tempDiceWord);
                 ArrayList<Dice> tempDiceEncountered = new ArrayList<>();
                 tempDiceEncountered.addAll(encounteredDice);
                 tempDiceEncountered.add(adjacentDice.get(i));
 
-                allCombos.addAll(this.getWords(combinedWords.get(i), adjacentDice.get(i), tempDiceEncountered, lengthOfWord - 1));
+                allCombos.addAll(this.getWords(combinedWords.get(i), temp.get(i), adjacentDice.get(i), tempDiceEncountered, lengthOfWord - 1));
             }
 
             return allCombos;
@@ -401,6 +469,17 @@ class Dice{
             return diceList25;
         }
 
+    }
+
+}
+
+class WordDiceTracker {
+
+    String word;
+    ArrayList<String> positions;
+
+    WordDiceTracker(){
+        this.positions = new ArrayList<>();
     }
 
 }
