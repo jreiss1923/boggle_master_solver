@@ -56,6 +56,18 @@ class BoggleBoardWithTrie extends BoggleBoard{
         return correctWords;
     }
 
+    void findWord(String word) {
+        Scanner input = new Scanner(System.in);
+        while(!word.equals("n")){
+            ArrayList<int[]> wordPos = this.getDicePosOfWord(word);
+            for(int[] letterPos : wordPos){
+                System.out.println("(" + letterPos[0] + ", " + letterPos[1] + ")");
+            }
+            System.out.println("\nWould you like to find another word?");
+            word = input.nextLine();
+        }
+    }
+
 }
 
 class Test{
@@ -74,16 +86,8 @@ class Test{
         System.out.println(b.calculateScore(words));
 
         System.out.println("\nWould you like to find a word?");
-        String word = input.nextLine();
+        b.findWord(input.nextLine());
 
-        while(!word.equals("n")){
-            ArrayList<int[]> wordPos = b.getDicePosOfWord(word);
-            for(int[] letterPos : wordPos){
-                System.out.println("(" + letterPos[0] + ", " + letterPos[1] + ")");
-            }
-            System.out.println("\nWould you like to find another word?");
-            word = input.nextLine();
-        }
     }
 
 
