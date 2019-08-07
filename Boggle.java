@@ -109,6 +109,27 @@ class BoggleBoard {
 
     }
 
+    ArrayList<int[]> getDicePosOfWord(String word){
+        ArrayList<int[]> dicePosWord = new ArrayList<>();
+
+        for(ArrayList<Dice> dList : this.diceWordPosTracker){
+            String s = "";
+            for(Dice d : dList){
+                s += d.currentLetter;
+            }
+            if(word.equals(s)){
+                for(Dice d : dList){
+                    int[] temp = new int[2];
+                    temp[0] = d.posx;
+                    temp[1] = d.posy;
+                    dicePosWord.add(temp);
+                }
+            }
+        }
+
+        return dicePosWord;
+    }
+
     ArrayList<ArrayList<int[]>> getDicePos(){
         ArrayList<ArrayList<int[]>> dicePosList = new ArrayList<>();
 

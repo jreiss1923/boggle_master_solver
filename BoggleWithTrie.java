@@ -48,17 +48,10 @@ class BoggleBoardWithTrie extends BoggleBoard{
             }
         }
         this.diceWordPosTracker = correctDiceWords;
-        System.out.println(correctDiceWords.size() + " current dice size");
-        System.out.println(correctWords.size() + " correct size");
-
         correctWords = this.remove4LetterPlurals(correctWords, dictWords);
         this.remove4LetterDicePlurals(dictWords);
-        System.out.println(correctDiceWords.size() + " current dice size");
-        System.out.println(correctWords.size() + " correct size");
         correctWords = this.removeAllDuplicates(correctWords);
         this.diceWordPosTracker = this.removeAllDiceDuplicates();
-        System.out.println(correctDiceWords.size() + " current dice size");
-        System.out.println(correctWords.size() + " correct size");
 
         return correctWords;
     }
@@ -68,6 +61,9 @@ class BoggleBoardWithTrie extends BoggleBoard{
 class Test{
 
     public static void main(String[] args){
+
+        Scanner input = new Scanner(System.in);
+
         BoggleBoardWithTrie b = new BoggleBoardWithTrie();
         b.generateBoard();
         b.printBoard();
@@ -76,6 +72,18 @@ class Test{
         b.printAllWords();
 
         System.out.println(b.calculateScore(words));
+
+        System.out.println("\nWould you like to find a word?");
+        String word = input.nextLine();
+
+        while(!word.equals("n")){
+            ArrayList<int[]> wordPos = b.getDicePosOfWord(word);
+            for(int[] letterPos : wordPos){
+                System.out.println("(" + letterPos[0] + ", " + letterPos[1] + ")");
+            }
+            System.out.println("\nWould you like to find another word?");
+            word = input.nextLine();
+        }
     }
 
 
