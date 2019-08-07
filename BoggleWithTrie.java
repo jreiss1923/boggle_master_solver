@@ -73,16 +73,8 @@ class Test{
         b.printBoard();
         ArrayList<String> words = b.getAllCorrectWords();
 
-        for(String word : words){
-            System.out.println(word);
-        }
-        for(ArrayList<Dice> dList : b.diceWordPosTracker){
-            String s = "";
-            for(Dice d : dList){
-                s += d.currentLetter;
-            }
-            System.out.println(s);
-        }
+        b.printAllWords();
+
         System.out.println(b.calculateScore(words));
     }
 

@@ -89,6 +89,43 @@ class BoggleBoard {
         return totalScore;
     }
 
+    void printAllWords(){
+        ArrayList<ArrayList<int[]>> wordsPos = this.getDicePos();
+
+        for(int i = 0; i < this.diceWordPosTracker.size(); i++){
+            ArrayList<Dice> diceWord = this.diceWordPosTracker.get(i);
+            ArrayList<int[]> wordPos = wordsPos.get(i);
+            String s = "";
+            for(Dice d : diceWord){
+                s += d.currentLetter;
+            }
+            s += " {";
+            for(int[] letterPos : wordPos){
+                s += "(" + letterPos[0] + ", " + letterPos[1] + ")";
+            }
+            s += "}";
+            System.out.println(s);
+        }
+
+    }
+
+    ArrayList<ArrayList<int[]>> getDicePos(){
+        ArrayList<ArrayList<int[]>> dicePosList = new ArrayList<>();
+
+        for(ArrayList<Dice> dList : this.diceWordPosTracker){
+            ArrayList<int[]> wordPos = new ArrayList<>();
+            for(Dice d : dList){
+                int[] posses = new int[2];
+                posses[0] = d.posx;
+                posses[1] = d.posy;
+                wordPos.add(posses);
+            }
+            dicePosList.add(wordPos);
+        }
+
+        return dicePosList;
+    }
+
     boolean compareDiceLists(ArrayList<Dice> dList, ArrayList<Dice> dListNew){
         ArrayList<Character> temp1 = new ArrayList<>();
         ArrayList<Character> temp2 = new ArrayList<>();
