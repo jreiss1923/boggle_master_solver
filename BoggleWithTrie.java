@@ -63,8 +63,30 @@ class BoggleBoardWithTrie extends BoggleBoard{
             for(int[] letterPos : wordPos){
                 System.out.println("(" + letterPos[0] + ", " + letterPos[1] + ")");
             }
+            this.printWordLocation(word);
             System.out.println("\nWould you like to find another word?");
             word = input.nextLine();
+        }
+    }
+
+    void printWordLocation(String word){
+        ArrayList<int[]> wordPos = this.getDicePosOfWord(word);
+
+        for(int i = 0; i < 5; i++){
+            String s = "";
+            for(int j = 0; j < 5; j++){
+                boolean hasLetterPos = false;
+                for(int[] letterPos : wordPos){
+                    if(i == letterPos[1] && j == letterPos[0]){
+                        s += this.boardState[i][j].currentLetter + " ";
+                        hasLetterPos = true;
+                    }
+                }
+                if(hasLetterPos == false){
+                    s += "_ ";
+                }
+            }
+            System.out.println(s);
         }
     }
 
