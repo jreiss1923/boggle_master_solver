@@ -105,7 +105,7 @@ class Test{
 
         b.printAllWords();
 
-        System.out.println(b.calculateScore(words));
+        System.out.println("There are " + words.size() + " words on the board that score for a total of " + b.calculateScore(words) + " points.");
 
         System.out.println("\nWould you like to find a word?");
         b.findWord(input.nextLine());
