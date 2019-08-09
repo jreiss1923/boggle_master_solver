@@ -56,6 +56,7 @@ class BoggleBoardWithTrie extends BoggleBoard{
         return correctWords;
     }
 
+    //prints board location and coordinates of word
     void findWord(String word) {
         Scanner input = new Scanner(System.in);
         while(!word.equals("n")){
@@ -69,6 +70,7 @@ class BoggleBoardWithTrie extends BoggleBoard{
         }
     }
 
+    //prints word location from board
     void printWordLocation(String word){
         ArrayList<int[]> wordPos = this.getDicePosOfWord(word);
 
@@ -105,7 +107,7 @@ class Test{
 
         b.printAllWords();
 
-        System.out.println("There are " + words.size() + " words on the board that score for a total of " + b.calculateScore(words) + " points.");
+        System.out.println("There are " + b.diceWordPosTracker.size() + " words on the board that score for a total of " + b.calculateScore(words) + " points.");
 
         System.out.println("\nWould you like to find a word?");
         b.findWord(input.nextLine());

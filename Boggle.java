@@ -89,6 +89,7 @@ class BoggleBoard {
         return totalScore;
     }
 
+    //prints all found words and coordinates
     void printAllWords(){
         ArrayList<ArrayList<int[]>> wordsPos = this.getDicePos();
 
@@ -109,6 +110,7 @@ class BoggleBoard {
 
     }
 
+    //returns list of dice coordinates for word
     ArrayList<int[]> getDicePosOfWord(String word){
         ArrayList<int[]> dicePosWord = new ArrayList<>();
 
@@ -130,6 +132,7 @@ class BoggleBoard {
         return dicePosWord;
     }
 
+    //makes list of positions for all words
     ArrayList<ArrayList<int[]>> getDicePos(){
         ArrayList<ArrayList<int[]>> dicePosList = new ArrayList<>();
 
@@ -147,6 +150,7 @@ class BoggleBoard {
         return dicePosList;
     }
 
+    //compares lists of dice
     boolean compareDiceLists(ArrayList<Dice> dList, ArrayList<Dice> dListNew){
         ArrayList<Character> temp1 = new ArrayList<>();
         ArrayList<Character> temp2 = new ArrayList<>();
@@ -170,6 +174,7 @@ class BoggleBoard {
         return new ArrayList<>(hashSet);
     }
 
+    //removes all duplicates from list of dice
     ArrayList<ArrayList<Dice>> removeAllDiceDuplicates(){
         ArrayList<ArrayList<Dice>> diceWordPosTrackerNew = new ArrayList<>();
 
@@ -208,6 +213,7 @@ class BoggleBoard {
         return words;
     }
 
+    //same but for dice
     void remove4LetterDicePlurals(ArrayList<String> dictWords){
         ArrayList<String> temp = new ArrayList<>();
         for(ArrayList<Dice> dList : this.diceWordPosTracker){
@@ -527,17 +533,6 @@ class Dice{
             return diceList25;
         }
 
-    }
-
-}
-
-class WordDiceTracker {
-
-    String word;
-    ArrayList<String> positions;
-
-    WordDiceTracker(){
-        this.positions = new ArrayList<>();
     }
 
 }
