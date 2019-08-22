@@ -321,7 +321,12 @@ class BoggleBoard {
             tempDiceWord.add(startingDice);
             tempDiceWord.add(d);
             trackDice.add(tempDiceWord);
-            adjacentWords.add("" + startingDice.currentLetter + d.currentLetter);
+            if(startingDice.currentLetter == 'q'){
+                adjacentWords.add("qu" + d.currentLetter);
+            }
+            else{
+                adjacentWords.add("" + startingDice.currentLetter + d.currentLetter);
+            }
             ArrayList<Dice> temp = new ArrayList<>();
             temp.add(d);
             temp.add(startingDice);
@@ -357,7 +362,12 @@ class BoggleBoard {
             }
 
             for (int i = 0; i < adjacentDice.size(); i++) {
-                combinedWords.add(startingWord + adjacentDice.get(i).currentLetter);
+                if(adjacentDice.get(i).currentLetter == 'q'){
+                    combinedWords.add(startingWord + "qu");
+                }
+                else{
+                    combinedWords.add(startingWord + adjacentDice.get(i).currentLetter);
+                }
                 ArrayList<Dice> tempDiceWord = new ArrayList<>(diceWord);
                 tempDiceWord.add(adjacentDice.get(i));
                 temp.add(tempDiceWord);
