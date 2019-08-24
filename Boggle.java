@@ -57,7 +57,7 @@ class BoggleBoard {
         for(int i = 0; i < 5; i++){
             for(int j = 0; j < 5; j++){
                 System.out.print("{");
-                for(char letter : boardState[i][j].diceLetters){
+                for(String letter : boardState[i][j].diceLetters){
                     System.out.print(letter + " ");
                 }
                 System.out.print("} ");
@@ -152,8 +152,8 @@ class BoggleBoard {
 
     //compares lists of dice
     boolean compareDiceLists(ArrayList<Dice> dList, ArrayList<Dice> dListNew){
-        ArrayList<Character> temp1 = new ArrayList<>();
-        ArrayList<Character> temp2 = new ArrayList<>();
+        ArrayList<String> temp1 = new ArrayList<>();
+        ArrayList<String> temp2 = new ArrayList<>();
         for(Dice d : dList){
             temp1.add(d.currentLetter);
         }
@@ -204,7 +204,7 @@ class BoggleBoard {
 
         for(String s : wordsCopy){
             if(s.length() == 4){
-                if(s.charAt(3) == 's' && !(s.charAt(2) == 's') && dictWords.contains(s.substring(0, 3))){
+                if(s.substring(3) == "s" && !(s.substring(2, 3) == "s") && dictWords.contains(s.substring(0, 3))){
                     words.remove(s);
                 }
             }
@@ -226,7 +226,7 @@ class BoggleBoard {
 
         for(int i = 0; i < temp.size(); i++){
             if(temp.get(i).length() == 4){
-                if(temp.get(i).charAt(3) == 's' && !(temp.get(i).charAt(2) == 's') && dictWords.contains(temp.get(i).substring(0, 3))){
+                if(temp.get(i).substring(3) == "s" && !(temp.get(i).substring(2, 3) == "s") && dictWords.contains(temp.get(i).substring(0, 3))){
                     this.diceWordPosTracker.add(i, new ArrayList<>());
                     this.diceWordPosTracker.remove(i + 1);
                 }
@@ -321,12 +321,7 @@ class BoggleBoard {
             tempDiceWord.add(startingDice);
             tempDiceWord.add(d);
             trackDice.add(tempDiceWord);
-            if(startingDice.currentLetter == 'q'){
-                adjacentWords.add("qu" + d.currentLetter);
-            }
-            else{
-                adjacentWords.add("" + startingDice.currentLetter + d.currentLetter);
-            }
+            adjacentWords.add("" + startingDice.currentLetter + d.currentLetter);
             ArrayList<Dice> temp = new ArrayList<>();
             temp.add(d);
             temp.add(startingDice);
@@ -362,12 +357,7 @@ class BoggleBoard {
             }
 
             for (int i = 0; i < adjacentDice.size(); i++) {
-                if(adjacentDice.get(i).currentLetter == 'q'){
-                    combinedWords.add(startingWord + "qu");
-                }
-                else{
-                    combinedWords.add(startingWord + adjacentDice.get(i).currentLetter);
-                }
+                combinedWords.add(startingWord + adjacentDice.get(i).currentLetter);
                 ArrayList<Dice> tempDiceWord = new ArrayList<>(diceWord);
                 tempDiceWord.add(adjacentDice.get(i));
                 temp.add(tempDiceWord);
@@ -426,8 +416,8 @@ class BoggleBoard {
 class Dice{
 
     int diceNum;
-    char[] diceLetters;
-    char currentLetter;
+    String[] diceLetters;
+    String currentLetter;
     int posx;
     int posy;
 
@@ -441,105 +431,105 @@ class Dice{
     }
 
     //function that decides which die to choose given a die number
-    char[] getLetters(int diceNum){
+    String[] getLetters(int diceNum){
         if(diceNum == 1){
-            char[] diceList1 = {'a', 'i', 's', 'r', 'f', 'a'};
+            String[] diceList1 = {"a", "i", "s", "r", "f", "a"};
             return diceList1;
         }
         else if(diceNum == 2){
-            char[] diceList2 = {'e', 'n', 's', 's', 's', 'u'};
+            String[] diceList2 = {"e", "n", "s", "s", "s", "u"};
             return diceList2;
         }
         else if(diceNum == 3){
-            char[] diceList3 = {'a', 'e', 'e', 'e', 'e', 'm'};
+            String[] diceList3 = {"a", "e", "e", "e", "e", "m"};
             return diceList3;
         }
         else if(diceNum == 4){
-            char[] diceList4 = {'d', 'r', 'n', 'l', 'd', 'o'};
+            String[] diceList4 = {"d", "r", "n", "l", "d", "o"};
             return diceList4;
         }
         else if(diceNum == 5){
-            char[] diceList5 = {'n', 'u', 'o', 'o', 't', 'w'};
+            String[] diceList5 = {"n", "u", "o", "o", "t", "w"};
             return diceList5;
         }
         else if(diceNum == 6){
-            char[] diceList6 = {'f', 'r', 'p', 'i', 's', 'y'};
+            String[] diceList6 = {"f", "r", "p", "i", "s", "y"};
             return diceList6;
         }
         else if(diceNum == 7){
-            char[] diceList7 = {'d', 'r', 'h', 'l', 'h', 'o'};
+            String[] diceList7 = {"d", "r", "h", "l", "h", "o"};
             return diceList7;
         }
         else if(diceNum == 8){
-            char[] diceList8 = {'d', 'r', 'n', 'l', 'h', 'h'};
+            String[] diceList8 = {"d", "r", "n", "l", "h", "h"};
             return diceList8;
         }
         else if(diceNum == 9){
-            char[] diceList9 = {'a', 'e', 'e', 'u', 'g', 'm'};
+            String[] diceList9 = {"a", "e", "e", "u", "g", "m"};
             return diceList9;
         }
         else if(diceNum == 10){
-            char[] diceList10 = {'c', 'e', 'l', 't', 'p', 'i'};
+            String[] diceList10 = {"c", "e", "l", "t", "p", "i"};
             return diceList10;
         }
         else if(diceNum == 11){
-            char[] diceList11 = {'a', 'a', 'r', 's', 'f', 'a'};
+            String[] diceList11 = {"a", "a", "r", "s", "f", "a"};
             return diceList11;
         }
         else if(diceNum == 12){
-            char[] diceList12 = {'e', 't', 't', 't', 'o', 'm'};
+            String[] diceList12 = {"e", "t", "t", "t", "o", "m"};
             return diceList12;
         }
         else if(diceNum == 13){
-            char[] diceList13 = {'a', 'e', 'n', 'n', 'n', 'd'};
+            String[] diceList13 = {"a", "e", "n", "n", "n", "d"};
             return diceList13;
         }
         else if(diceNum == 14){
-            char[] diceList14 = {'a', 'f', 'r', 's', 'y', 'i'};
+            String[] diceList14 = {"a", "f", "r", "s", "y", "i"};
             return diceList14;
         }
         else if(diceNum == 15){
-            char[] diceList15 = {'g', 'o', 'v', 'r', 'w', 'r'};
+            String[] diceList15 = {"g", "o", "v", "r", "w", "r"};
             return diceList15;
         }
         else if(diceNum == 16){
-            char[] diceList16 = {'h', 'i', 'r', 'y', 'p', 'r'};
+            String[] diceList16 = {"h", "i", "r", "y", "p", "r"};
             return diceList16;
         }
         else if(diceNum == 17){
-            char[] diceList17 = {'o', 'o', 't', 'u', 'o', 't'};
+            String[] diceList17 = {"o", "o", "t", "u", "o", "t"};
             return diceList17;
         }
         else if(diceNum == 18){
-            char[] diceList18 = {'c', 'c', 's', 't', 'n', 'w'};
+            String[] diceList18 = {"c", "c", "s", "t", "n", "w"};
             return diceList18;
         }
         else if(diceNum == 19){
-            char[] diceList19 = {'d', 'h', 'h', 't', 'o', 'n'};
+            String[] diceList19 = {"d", "h", "h", "t", "o", "n"};
             return diceList19;
         }
         else if(diceNum == 20){
-            char[] diceList20 = {'b', 'k', 'q', 'z', 'x', 'j'};
+            String[] diceList20 = {"b", "k", "qu", "z", "x", "j"};
             return diceList20;
         }
         else if(diceNum == 21){
-            char[] diceList21 = {'a', 'e', 'm', 'n', 'n', 'g'};
+            String[] diceList21 = {"a", "e", "m", "n", "n", "g"};
             return diceList21;
         }
         else if(diceNum == 22){
-            char[] diceList22 = {'c', 'e', 's', 'p', 's', 'i'};
+            String[] diceList22 = {"c", "e", "s", "p", "s", "i"};
             return diceList22;
         }
         else if(diceNum == 23){
-            char[] diceList23 = {'a', 'e', 'e', 'e', 'e', 'a'};
+            String[] diceList23 = {"a", "e", "e", "e", "e", "a"};
             return diceList23;
         }
         else if(diceNum == 24){
-            char[] diceList24 = {'e', 'i', 't', 't', 'i', 'i'};
+            String[] diceList24 = {"e", "i", "t", "t", "i", "i"};
             return diceList24;
         }
         else{
-            char[] diceList25 = {'c', 'e', 'l', 't', 'i', 'i'};
+            String[] diceList25 = {"c", "e", "l", "t", "i", "i"};
             return diceList25;
         }
 
