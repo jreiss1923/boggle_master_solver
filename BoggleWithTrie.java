@@ -48,6 +48,7 @@ class BoggleBoardWithTrie extends BoggleBoard{
                 correctDiceWords.add(this.diceWordPosTracker.get(i));
             }
         }
+        
         this.diceWordPosTracker = correctDiceWords;
         correctWords = this.remove4LetterPlurals(correctWords, dictWords);
         this.remove4LetterDicePlurals(dictWords);
@@ -81,7 +82,12 @@ class BoggleBoardWithTrie extends BoggleBoard{
                 boolean hasLetterPos = false;
                 for(int[] letterPos : wordPos){
                     if(i == letterPos[1] && j == letterPos[0]){
-                        s += this.boardState[i][j].currentLetter + " ";
+                        if(this.boardState[i][j].currentLetter.equals("qu")){
+                            s += "q ";
+                        }
+                        else{
+                            s += this.boardState[i][j].currentLetter + " ";
+                        }
                         hasLetterPos = true;
                     }
                 }

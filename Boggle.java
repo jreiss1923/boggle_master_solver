@@ -212,7 +212,7 @@ class BoggleBoard {
 
         for(String s : wordsCopy){
             if(s.length() == 4){
-                if(s.substring(3) == "s" && !(s.substring(2, 3) == "s") && dictWords.contains(s.substring(0, 3))){
+                if(s.charAt(3) == 's' && !(s.charAt(2) == 's') && dictWords.contains(s.substring(0, 3))){
                     words.remove(s);
                 }
             }
@@ -234,7 +234,7 @@ class BoggleBoard {
 
         for(int i = 0; i < temp.size(); i++){
             if(temp.get(i).length() == 4){
-                if(temp.get(i).substring(3) == "s" && !(temp.get(i).substring(2, 3) == "s") && dictWords.contains(temp.get(i).substring(0, 3))){
+                if(temp.get(i).charAt(3) == 's' && !(temp.get(i).charAt(2) == 's') && dictWords.contains(temp.get(i).substring(0, 3))){
                     this.diceWordPosTracker.add(i, new ArrayList<>());
                     this.diceWordPosTracker.remove(i + 1);
                 }
