@@ -33,6 +33,7 @@ class BoggleBoardWithTrie extends BoggleBoard{
         ArrayList<String> dictWords = this.scanDictWords();
         ArrayList<ArrayList<Dice>> correctDiceWords = new ArrayList<>();
 
+        allWords.addAll(getAllWords(3));
         allWords.addAll(getAllWords(4));
         allWords.addAll(getAllWords(5));
         allWords.addAll(getAllWords(6));
@@ -42,7 +43,7 @@ class BoggleBoardWithTrie extends BoggleBoard{
         ArrayList<String> correctWords = new ArrayList<>();
 
         for(int i = 0; i < allWords.size(); i++){
-            if(dictionary.search(allWords.get(i))){
+            if(dictionary.search(allWords.get(i)) && allWords.get(i).length() >= 4){
                 correctWords.add(allWords.get(i));
                 correctDiceWords.add(this.diceWordPosTracker.get(i));
             }

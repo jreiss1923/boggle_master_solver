@@ -46,7 +46,12 @@ class BoggleBoard {
     void printBoard(){
         for(int i = 0; i < 5; i++){
             for(int j = 0; j < 5; j++){
-                System.out.print(boardState[i][j].currentLetter + " ");
+                if(boardState[i][j].currentLetter.equals("qu")){
+                    System.out.print("q ");
+                }
+                else{
+                    System.out.print(boardState[i][j].currentLetter + " ");
+                }
             }
             System.out.println();
         }
@@ -70,6 +75,9 @@ class BoggleBoard {
     int calculateScore(ArrayList<String> words){
         int totalScore = 0;
         for(String s : words){
+            if(s.contains("qu")){
+                totalScore += 1;
+            }
             if(s.length() == 4){
                 totalScore += 1;
             }
